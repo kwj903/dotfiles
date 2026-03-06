@@ -1,2 +1,7 @@
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+path=(
+  "$HOME/.local/bin"
+  "/Applications/Docker.app/Contents/Resources/bin"
+  $path
+)
+
+export PATH
