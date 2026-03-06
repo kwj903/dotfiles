@@ -21,3 +21,4 @@ source ~/.dotfiles/zsh/tools.zsh
 source ~/.dotfiles/zsh/secrets.zsh
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+test -e /Users/kwj903/.iterm2_shell_integration.zsh && source /Users/kwj903/.iterm2_shell_integration.zsh || true
