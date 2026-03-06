@@ -1,16 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting dotfiles setup..."
+set -e
 
-# Homebrew 설치 여부 확인
-if ! command -v brew &> /dev/null
-then
-    echo "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo "Starting dotfiles install..."
+
+# brew bundle 사용 준비
+brew tap homebrew/bundle
+
+# Brewfile 설치
+if [ -f brew/Brewfile ]; then
+  echo "Installing Brew packages..."
+  brew bundle --file=brew/Brewfile
 fi
-
-echo "Installing CLI tools..."
-brew bundle --file=brew/Brewfile
 
 echo "Creating symlink for zshrc..."
 
@@ -20,4 +21,4 @@ echo "Reloading shell..."
 
 source ~/.zshrc
 
-echo "Setup complete."
+echo "Dotfiles install complete."
