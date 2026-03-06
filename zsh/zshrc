@@ -1,0 +1,23 @@
+# Powerlevel10k instant prompt
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+# modular configs
+source ~/.dotfiles/zsh/exports.zsh
+source ~/.dotfiles/zsh/plugins.zsh
+source ~/.dotfiles/zsh/history.zsh
+source ~/.dotfiles/zsh/aliases.zsh
+source ~/.dotfiles/zsh/functions.zsh
+source ~/.dotfiles/zsh/keybindings.zsh
+source ~/.dotfiles/zsh/tools.zsh
+source ~/.dotfiles/zsh/secrets.zsh
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
