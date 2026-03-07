@@ -7,18 +7,21 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
 plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
+source "$ZSH/oh-my-zsh.sh"
 
 # modular configs
-source ~/.dotfiles/zsh/exports.zsh
-source ~/.dotfiles/zsh/plugins.zsh
-source ~/.dotfiles/zsh/history.zsh
-source ~/.dotfiles/zsh/aliases.zsh
-source ~/.dotfiles/zsh/functions.zsh
-source ~/.dotfiles/zsh/keybindings.zsh
-source ~/.dotfiles/zsh/tools.zsh
-source ~/.dotfiles/zsh/secrets.zsh
+for file in \
+  ~/.dotfiles/zsh/exports.zsh \
+  ~/.dotfiles/zsh/plugins.zsh \
+  ~/.dotfiles/zsh/history.zsh \
+  ~/.dotfiles/zsh/aliases.zsh \
+  ~/.dotfiles/zsh/functions.zsh \
+  ~/.dotfiles/zsh/keybindings.zsh \
+  ~/.dotfiles/zsh/tools.zsh \
+  ~/.dotfiles/zsh/secrets.zsh \
+  ~/.dotfiles/zsh/local.zsh
+do
+  [[ -f "$file" ]] && source "$file"
+done
 
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-test -e /Users/kwj903/.iterm2_shell_integration.zsh && source /Users/kwj903/.iterm2_shell_integration.zsh || true
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh

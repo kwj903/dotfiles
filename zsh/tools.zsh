@@ -2,12 +2,11 @@
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}' --preview-window=right:60%"
 export _ZO_FZF_OPTS="--height=40% --reverse"
 
-if [[ -f "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh" ]]; then
-  source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
-fi
+if command -v brew >/dev/null 2>&1; then
+  FZF_PREFIX="$(brew --prefix fzf 2>/dev/null || brew --prefix)/opt/fzf"
 
-if [[ -f "$(brew --prefix)/opt/fzf/shell/completion.zsh" ]]; then
-  source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+  [[ -f "$FZF_PREFIX/shell/key-bindings.zsh" ]] && source "$FZF_PREFIX/shell/key-bindings.zsh"
+  [[ -f "$FZF_PREFIX/shell/completion.zsh" ]] && source "$FZF_PREFIX/shell/completion.zsh"
 fi
 
 # direnv
@@ -23,12 +22,9 @@ fi
 # nvm
 export NVM_DIR="$HOME/.nvm"
 
-if [[ -s "/usr/local/opt/nvm/nvm.sh" ]]; then
-  source "/usr/local/opt/nvm/nvm.sh"
-fi
-
-if [[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ]]; then
-  source "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+if command -v brew >/dev/null 2>&1; then
+  NVM_PREFIX="$(brew --prefix nvm 2>/dev/null)"
+  [[ -n "$NVM_PREFIX" && -s "$NVM_PREFIX/nvm.sh" ]] && source "$NVM_PREFIX/nvm.sh"
 fi
 
 # zoxide

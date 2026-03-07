@@ -1,0 +1,14 @@
+# secrets / local-only
+zsh/secrets.zsh
+zsh/local.zsh
+
+# macOS
+.DS_Store
+
+# editor junk
+.vscode/
+*.swp
+*.swo
+
+# compiled zsh files
+*.zwc
