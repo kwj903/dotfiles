@@ -2,8 +2,9 @@
 set -e
 
 echo "[1/4] Preparing Homebrew bundle..."
+
 if command -v brew >/dev/null 2>&1; then
-#   brew tap homebrew/bundle
+  echo "Homebrew found."
 else
   echo "Homebrew is not installed."
   echo "Run bootstrap first."
