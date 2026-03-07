@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 check_cmd() {
   if command -v "$1" >/dev/null 2>&1; then
@@ -8,8 +9,7 @@ check_cmd() {
   fi
 }
 
-echo "=== dotfiles health check ==="
-
+echo "=== macOS dotfiles health check ==="
 check_cmd git
 check_cmd brew
 check_cmd zsh
