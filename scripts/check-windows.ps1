@@ -1,4 +1,4 @@
-$commands = @("git", "pwsh", "rg", "fzf", "bat", "eza", "zoxide")
+$commands = @("git", "rg", "fzf", "bat", "eza", "zoxide", "lazygit")
 
 Write-Host "=== Windows PowerShell health check ==="
 foreach ($cmd in $commands) {
