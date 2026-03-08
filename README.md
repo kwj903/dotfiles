@@ -2,19 +2,19 @@
 
 내 개발 환경을 **재현 가능하게 관리하기 위한 dotfiles 저장소**입니다.
 
-이 저장소는 이제 **macOS 전용**이 아니라, 아래 3가지 환경을 함께 다루는 것을 목표로 합니다.
+이 저장소는 이제 다음 3가지 환경을 함께 다룹니다.
 
 - **macOS + zsh**
 - **Windows WSL + zsh**
 - **Windows PowerShell**
 
-핵심 철학은 같습니다.
+핵심 목표는 같습니다.
 
 - 새 컴퓨터에서도 빠르게 같은 작업 환경을 복원한다.
 - 쉘 설정을 기능별 파일로 분리해서 관리한다.
 - 장비 전용 설정과 민감 정보를 공용 설정과 분리한다.
 - 설치 과정을 자동화해서 환경을 코드로 재현한다.
-- macOS / WSL / Windows를 **공통 개념 + OS별 구현**으로 나눠 관리한다.
+- macOS / WSL / Windows PowerShell을 한 저장소에서 관리한다.
 
 ---
 
@@ -41,9 +41,13 @@
 - Windows Terminal + PowerShell
 - 목적: Windows 네이티브 환경에서도 비슷한 alias / function / workflow 유지
 
+> 참고
+> macOS 기준 설정은 현재 Intel Mac 환경에서 먼저 정리되어 있습니다.
+> Apple Silicon Mac으로 옮기면 `/usr/local` 일부 경로나 Homebrew 위치를 `/opt/homebrew` 기준으로 조정해야 할 수 있습니다.
+
 ---
 
-## 2. 저장소 목적
+## 2. 이 저장소의 목적
 
 이 저장소의 목적은 다음과 같습니다.
 
@@ -53,9 +57,7 @@
 4. 설치 과정을 자동화해서 환경을 코드로 재현한다.
 5. macOS / WSL / Windows PowerShell을 한 저장소에서 관리한다.
 
----
-
-## 3. 핵심 개념
+핵심 개념:
 
 - 실제 zsh 설정 파일은 `~/.dotfiles/zsh/zshrc`
 - 홈 디렉토리의 `~/.zshrc`는 심볼릭 링크
@@ -63,17 +65,16 @@
 - macOS 초기 세팅은 `scripts/bootstrap.sh`
 - WSL 설치는 `scripts/install-wsl.sh`
 - Windows PowerShell 설치는 `powershell/install-windows.ps1`
-- 점검 스크립트는 환경별로 분리될 수 있음
 - 장비 전용 설정은 `local.*`
 - 민감 정보는 `secrets.*`
 
 ---
 
-## 4. 빠른 시작
+## 3. 빠른 시작
 
 ### A. macOS
 
-#### Homebrew / Git이 이미 준비된 경우
+#### 방법 1) Homebrew / Git이 이미 준비된 경우
 
 ```bash
 git clone https://github.com/kwj903/dotfiles.git ~/.dotfiles
@@ -82,7 +83,7 @@ cd ~/.dotfiles
 exec zsh
 ```
 
-#### 완전히 새 macOS 환경인 경우
+#### 방법 2) 완전히 새 macOS 환경인 경우
 
 ```bash
 git clone https://github.com/kwj903/dotfiles.git ~/.dotfiles
@@ -96,6 +97,12 @@ exec zsh
 ```bash
 touch ~/.dotfiles/zsh/local.zsh
 touch ~/.dotfiles/zsh/secrets.zsh
+```
+
+설치 점검:
+
+```bash
+~/.dotfiles/scripts/check.sh
 ```
 
 ### B. Windows WSL
@@ -148,7 +155,7 @@ PowerShell을 다시 열면 프로필이 적용됩니다.
 
 ---
 
-## 5. 저장소 구조
+## 4. 저장소 구조
 
 ```text
 .dotfiles
@@ -180,7 +187,7 @@ PowerShell을 다시 열면 프로필이 적용됩니다.
 
 ---
 
-## 6. 파일별 역할
+## 5. 파일별 역할
 
 ### zsh 설정
 
@@ -192,7 +199,8 @@ PowerShell을 다시 열면 프로필이 적용됩니다.
 #### `zsh/exports.zsh`
 
 - 환경변수와 `PATH` 설정
-- macOS / Linux(WSL) 분기 포함 가능
+- `PYENV_ROOT`, `NVM_DIR`, `EDITOR`, `PAGER` 같은 값 관리
+- macOS / Linux(WSL) 환경 차이를 반영할 수 있음
 
 #### `zsh/plugins.zsh`
 
@@ -217,7 +225,7 @@ PowerShell을 다시 열면 프로필이 적용됩니다.
 
 #### `zsh/tools.zsh`
 
-- `fzf`, `direnv`, `pyenv`, `nvm`, `zoxide` 등 개발 도구 초기화
+- `fzf`, `direnv`, `pyenv`, `nvm`, `zoxide` 같은 개발 도구 초기화
 
 #### `zsh/local.zsh`
 
@@ -234,20 +242,26 @@ PowerShell을 다시 열면 프로필이 적용됩니다.
 #### `powershell/Microsoft.PowerShell_profile.ps1`
 
 - PowerShell 메인 프로필
-- alias, 함수, 도구 초기화가 현재 이 파일 하나에 들어 있음
+- alias, 함수, 도구 초기화 로직 포함
+
+#### `powershell/install-windows.ps1`
+
+- PowerShell 프로필 연결 스크립트
+- Windows PowerShell 환경에서 dotfiles를 적용하는 진입점
 
 ### 패키지 관리
 
 #### `brew/Brewfile`
 
 - macOS/Homebrew 기준 설치 목록
-- Windows는 별도 스크립트, WSL은 `apt` 기반 설치 스크립트로 관리
+- CLI 도구, 앱, 확장 설치를 재현하기 위한 파일
 
 ### 스크립트
 
 #### `scripts/bootstrap.sh`
 
 - 완전히 새 macOS 환경용 초기 진입 스크립트
+- Homebrew, git 등 기본 준비까지 포함한 진입점
 
 #### `scripts/install.sh`
 
@@ -256,22 +270,20 @@ PowerShell을 다시 열면 프로필이 적용됩니다.
 #### `scripts/install-wsl.sh`
 
 - WSL 설치 스크립트
-
-#### `powershell/install-windows.ps1`
-
-- PowerShell 프로필 연결 스크립트
+- WSL 안에서 zsh 기반 dotfiles를 적용하는 진입점
 
 #### `scripts/link.sh`
 
 - 심볼릭 링크 생성 스크립트
+- 현재 연결: `~/.zshrc -> ~/.dotfiles/zsh/zshrc`
 
 #### `scripts/check.sh`
 
-- 설치 상태 점검 스크립트
+- macOS 설치 상태 점검 스크립트
 
 ---
 
-## 7. 설치 후 해야 할 설정
+## 6. 설치 후 해야 할 설정
 
 ### `zsh/local.zsh`
 
@@ -300,11 +312,11 @@ export ANTHROPIC_API_KEY="..."
 
 ### PowerShell 전용 로컬 설정
 
-필요하면 `powershell/local.ps1` 같은 파일을 따로 두고 프로필에서 불러오도록 구성할 수 있습니다.
+필요하면 `powershell/local.ps1` 같은 파일을 따로 두고 프로필에서 불러오도록 확장할 수 있습니다.
 
 ---
 
-## 8. 운영 원칙
+## 7. 운영 원칙
 
 - 민감 정보는 절대 Git에 올리지 않는다.
 - 장비 전용 설정은 `local.*` 계열로 분리한다.
@@ -314,7 +326,7 @@ export ANTHROPIC_API_KEY="..."
 
 ---
 
-## 9. 추천 사용 방식
+## 8. 추천 사용 방식
 
 ### macOS
 
@@ -330,5 +342,45 @@ export ANTHROPIC_API_KEY="..."
 ### Windows PowerShell
 
 - Windows 네이티브 작업용
-- 시스템 관리, `winget`, Windows 전용 도구 실행
+- 시스템 관리, Windows 전용 도구 실행
 - zsh와 비슷한 alias / function 감각 유지
+
+---
+
+## 9. 문제 해결
+
+### WSL에서 일부 도구가 없을 때
+
+WSL은 Homebrew 대신 `apt` 기반이므로 필요한 패키지를 따로 설치해야 할 수 있습니다.
+
+### PowerShell 프로필이 적용되지 않을 때
+
+PowerShell에서:
+
+```powershell
+$PROFILE
+Test-Path $PROFILE
+```
+
+실행 정책이 막는 경우:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+### zsh가 기본 shell이 아닐 때
+
+macOS / WSL에서:
+
+```bash
+chsh -s "$(command -v zsh)"
+```
+
+---
+
+## 10. 앞으로 개선할 것
+
+- macOS / WSL / Windows용 점검 스크립트 더 분리하기
+- `winget` 기반 Windows 패키지 관리 추가
+- Windows Terminal 설정 파일 연동
+- 공통 alias / function 개념을 더 정리해서 OS별 구현 차이를 줄이기
