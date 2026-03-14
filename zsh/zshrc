@@ -18,6 +18,7 @@ for file in \
   ~/.dotfiles/zsh/functions.zsh \
   ~/.dotfiles/zsh/keybindings.zsh \
   ~/.dotfiles/zsh/tools.zsh \
+  ~/.dotfiles/zsh/versions.zsh \
   ~/.dotfiles/zsh/secrets.zsh \
   ~/.dotfiles/zsh/local.zsh
 do
