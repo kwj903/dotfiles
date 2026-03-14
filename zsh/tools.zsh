@@ -16,6 +16,21 @@ elif [[ -f ~/.fzf.zsh ]]; then
 fi
 
 # ------------------------------
+# git-delta
+# ------------------------------
+if command -v delta >/dev/null 2>&1; then
+  export GIT_PAGER="delta"
+  export DELTA_PAGER="less -R"
+fi
+
+# ------------------------------
+# atuin
+# ------------------------------
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
+# ------------------------------
 # direnv
 # ------------------------------
 if command -v direnv >/dev/null 2>&1; then

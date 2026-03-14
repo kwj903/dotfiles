@@ -25,3 +25,11 @@ zi() { cd "$(zoxide query --interactive)"; }
 zne() { nvim "$(zoxide query --interactive)"; }
 
 zcode() { code "$(zoxide query --interactive)"; }
+
+wrun() {
+  watchexec --restart -- "$@"
+}
+
+bench() {
+  hyperfine --warmup 1 "$@"
+}

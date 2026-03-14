@@ -218,7 +218,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 - `zsh/keybindings.zsh`
   - 키 바인딩
 - `zsh/tools.zsh`
-  - `fzf`, `direnv`, `zoxide` 초기화
+  - `fzf`, `git-delta`, `atuin`, `direnv`, `zoxide` 초기화
 
 ### PowerShell 설정
 
@@ -238,7 +238,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 - `brew/Brewfile`
   - macOS용 Homebrew 패키지, cask 앱, VS Code 확장 목록
-  - 예: `git`, `ripgrep`, `bat`, `eza`, `fzf`, `gh`, `lazygit`, `tmux`, `zoxide`
+  - 예: `git`, `ripgrep`, `bat`, `eza`, `fzf`, `gh`, `lazygit`, `tmux`, `zoxide`, `just`, `git-delta`, `watchexec`, `hyperfine`, `atuin`
 
 ### macOS 스크립트
 
@@ -298,6 +298,19 @@ export ANTHROPIC_API_KEY="..."
 ```
 
 macOS와 WSL 설치 스크립트는 두 파일을 자동으로 `touch`합니다.
+
+### 새로 추가한 CLI 빠른 사용
+
+- `j`
+  - `just` 실행 (예: `j test`)
+- `w` / `wrun`
+  - `watchexec` 실행 (예: `wrun "npm test"`)
+- `hf` / `bench`
+  - `hyperfine` 실행 (예: `bench "pytest -q" "pytest -q -n auto"`)
+- `atuin`
+  - 셸 히스토리 검색 강화 (`Ctrl-R`)
+- `git-delta`
+  - zsh 세션에서 `git diff`, `git show` 출력이 `delta` 페이저로 표시됨
 
 ---
 

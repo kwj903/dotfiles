@@ -21,6 +21,11 @@ check_cmd zoxide
 check_cmd tmux
 check_cmd lazygit
 check_cmd gh
+check_cmd just
+check_cmd delta
+check_cmd watchexec
+check_cmd hyperfine
+check_cmd atuin
 
 echo
 echo "=== symlink check ==="

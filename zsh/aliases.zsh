@@ -6,6 +6,9 @@ alias cat="bat --paging=never"
 alias grep="rg"
 
 alias g="lazygit"
+alias j="just"
+alias w="watchexec"
+alias hf="hyperfine"
 
 alias tm='task-master'
 alias taskmaster='task-master'
