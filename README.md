@@ -218,7 +218,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 - `zsh/keybindings.zsh`
   - 키 바인딩
 - `zsh/tools.zsh`
-  - `fzf`, `direnv`, `pyenv`, `nvm`, `zoxide` 초기화
+  - `fzf`, `direnv`, `zoxide` 초기화
 
 ### PowerShell 설정
 
@@ -238,7 +238,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 - `brew/Brewfile`
   - macOS용 Homebrew 패키지, cask 앱, VS Code 확장 목록
-  - 예: `git`, `ripgrep`, `bat`, `eza`, `fzf`, `gh`, `lazygit`, `tmux`, `zoxide`, `pyenv`, `nvm`
+  - 예: `git`, `ripgrep`, `bat`, `eza`, `fzf`, `gh`, `lazygit`, `tmux`, `zoxide`
 
 ### macOS 스크립트
 
