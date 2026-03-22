@@ -9,7 +9,7 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 if [ -f "$HOME/.dotfiles/brew/Brewfile" ]; then
-  brew bundle --file="$HOME/.dotfiles/brew/Brewfile"
+  brew bundle install --file="$HOME/.dotfiles/brew/Brewfile" --cleanup
 else
   echo "Brewfile이 없습니다."
 fi

@@ -1,3 +1,4 @@
+# version manager activation only
 # ------------------------------
 # version managers
 # current mode: mise only

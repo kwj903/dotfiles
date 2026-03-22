@@ -1,7 +1,9 @@
+# interactive shell aliases only
 alias ls="eza"
 alias ll="eza -la"
 alias tree="eza --tree"
 
+# convenience overrides for interactive use
 alias cat="bat --paging=never"
 alias grep="rg"
 

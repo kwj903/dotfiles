@@ -1,3 +1,4 @@
+# shell history behavior
 HISTSIZE=100000
 SAVEHIST=100000
 

@@ -1,3 +1,4 @@
+# main zsh loader; keep logic in modular files
 # Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -26,3 +27,13 @@ do
 done
 
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+# OpenClaw Completion
+source "/Users/kwj903/.openclaw/completions/openclaw.zsh"
+
+# bun completions
+[ -s "/Users/kwj903/.bun/_bun" ] && source "/Users/kwj903/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
