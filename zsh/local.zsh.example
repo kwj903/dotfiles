@@ -1,0 +1,12 @@
+# machine-specific settings that should not be committed
+
+if [[ -r "$HOME/.iterm2_shell_integration.zsh" ]]; then
+  source "$HOME/.iterm2_shell_integration.zsh"
+fi
+
+if [[ -r "$HOME/.openclaw/completions/openclaw.zsh" ]]; then
+  source "$HOME/.openclaw/completions/openclaw.zsh"
+fi
+
+alias tm='task-master'
+alias taskmaster='task-master'

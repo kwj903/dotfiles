@@ -6,7 +6,6 @@ export VISUAL="$EDITOR"
 export PAGER="less -FRX"
 export GOG_ACCOUNT=kwakwoojae@gmail.com
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 add_path_if_dir() {
   [[ -d "$1" ]] && path=("$1" $path)
@@ -32,30 +31,20 @@ add_macos_app_cli_paths() {
   done
 }
 
-case "$(uname -s)" in
-  Darwin)
-    add_macos_app_cli_paths
-    path=(
-      "$HOME/.local/bin"
-      "/usr/local/bin"
-      "/usr/local/sbin"
-      "/usr/bin"
-      "/bin"
-      "/usr/sbin"
-      "/sbin"
-      $path
-    )
-    ;;
-  Linux)
-    path=(
-      "$HOME/.local/bin"
-      "$HOME/.local/share/pnpm"
-      "/usr/local/bin"
-      "/usr/bin"
-      "/bin"
-      $path
-    )
-    ;;
-esac
+path=(
+  "$HOME/.local/bin"
+  "$BUN_INSTALL/bin"
+  "/opt/homebrew/bin"
+  "/opt/homebrew/sbin"
+  "/usr/local/bin"
+  "/usr/local/sbin"
+  "/usr/bin"
+  "/bin"
+  "/usr/sbin"
+  "/sbin"
+  $path
+)
+
+add_macos_app_cli_paths
 
 export PATH

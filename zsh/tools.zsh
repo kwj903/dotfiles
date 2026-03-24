@@ -11,9 +11,6 @@ elif command -v brew >/dev/null 2>&1; then
   FZF_PREFIX="$(brew --prefix fzf 2>/dev/null || true)"
   [[ -f "$FZF_PREFIX/shell/key-bindings.zsh" ]] && source "$FZF_PREFIX/shell/key-bindings.zsh"
   [[ -f "$FZF_PREFIX/shell/completion.zsh" ]] && source "$FZF_PREFIX/shell/completion.zsh"
-elif [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
-  source /usr/share/doc/fzf/examples/key-bindings.zsh
-  source /usr/share/doc/fzf/examples/completion.zsh
 fi
 
 # ------------------------------
@@ -43,4 +40,11 @@ fi
 # ------------------------------
 if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
+fi
+
+# ------------------------------
+# bun
+# ------------------------------
+if [[ -s "$HOME/.bun/_bun" ]]; then
+  source "$HOME/.bun/_bun"
 fi

@@ -12,8 +12,5 @@ alias j="just"
 alias w="watchexec"
 alias hf="hyperfine"
 
-alias tm='task-master'
-alias taskmaster='task-master'
-
 # tmux alias 모음
 alias ta='tmux new -As work'

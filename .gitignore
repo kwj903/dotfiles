@@ -1,6 +1,6 @@
-# secrets / local-only
-zsh/secrets.zsh
-zsh/local.zsh
+# local-only shell files
+/zsh/local.zsh
+/zsh/secrets.zsh
 
 # macOS
 .DS_Store

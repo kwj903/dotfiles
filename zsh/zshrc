@@ -1,39 +1,28 @@
-# main zsh loader; keep logic in modular files
+# main zsh loader for macOS dotfiles
+export DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
+
 # Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-plugins=(git)
-source "$ZSH/oh-my-zsh.sh"
-
-# modular configs
 for file in \
-  ~/.dotfiles/zsh/exports.zsh \
-  ~/.dotfiles/zsh/plugins.zsh \
-  ~/.dotfiles/zsh/history.zsh \
-  ~/.dotfiles/zsh/aliases.zsh \
-  ~/.dotfiles/zsh/functions.zsh \
-  ~/.dotfiles/zsh/keybindings.zsh \
-  ~/.dotfiles/zsh/tools.zsh \
-  ~/.dotfiles/zsh/versions.zsh \
-  ~/.dotfiles/zsh/secrets.zsh \
-  ~/.dotfiles/zsh/local.zsh
+  "$DOTFILES_DIR/zsh/env.zsh" \
+  "$DOTFILES_DIR/zsh/prompt.zsh" \
+  "$DOTFILES_DIR/zsh/history.zsh" \
+  "$DOTFILES_DIR/zsh/aliases.zsh" \
+  "$DOTFILES_DIR/zsh/functions.zsh" \
+  "$DOTFILES_DIR/zsh/keybindings.zsh" \
+  "$DOTFILES_DIR/zsh/tools.zsh" \
+  "$DOTFILES_DIR/zsh/runtime.zsh" \
+  "$DOTFILES_DIR/zsh/secrets.zsh" \
+  "$DOTFILES_DIR/zsh/local.zsh"
 do
   [[ -f "$file" ]] && source "$file"
 done
 
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-
-# OpenClaw Completion
-source "/Users/kwj903/.openclaw/completions/openclaw.zsh"
-
-# bun completions
-[ -s "/Users/kwj903/.bun/_bun" ] && source "/Users/kwj903/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+if [[ -f "$HOME/.p10k.zsh" ]]; then
+  source "$HOME/.p10k.zsh"
+elif [[ -f "$DOTFILES_DIR/zsh/p10k.zsh" ]]; then
+  source "$DOTFILES_DIR/zsh/p10k.zsh"
+fi
