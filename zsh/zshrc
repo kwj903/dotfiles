@@ -26,3 +26,6 @@ if [[ -f "$HOME/.p10k.zsh" ]]; then
 elif [[ -f "$DOTFILES_DIR/zsh/p10k.zsh" ]]; then
   source "$DOTFILES_DIR/zsh/p10k.zsh"
 fi
+
+# OpenClaw Completion
+source "/Users/kwj903/.openclaw/completions/openclaw.zsh"
