@@ -34,3 +34,30 @@ wrun() {
 bench() {
   hyperfine --warmup 1 "$@"
 }
+
+# -----------------------------
+# Local server Functions
+# -----------------------------
+
+# 특정 포트 확인
+port() {
+  lsof -nP -iTCP:"$1" -sTCP:LISTEN
+}
+
+# 특정 포트 종료
+killport() {
+  kill -9 $(lsof -t -i:"$1")
+}
+
+# 특정 포트 응답 확인
+checkport() {
+  curl -I "http://localhost:$1"
+}
+
+# 특정 포트 상태 한 번에 보기
+statusport() {
+  echo "--- PORT $1 ---"
+  lsof -nP -iTCP:"$1" -sTCP:LISTEN
+  echo
+  curl -I "http://localhost:$1"
+}

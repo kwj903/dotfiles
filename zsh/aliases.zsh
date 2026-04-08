@@ -131,5 +131,40 @@ gstack-status() {
   done
 }
 
+# -----------------------------
+# Local server check / manage
+# -----------------------------
+
+# 전체 LISTEN 서버 보기
+alias ports='lsof -iTCP -sTCP:LISTEN -n -P'
+
+# 자주 쓰는 포트 확인
+alias port3000='lsof -nP -iTCP:3000 -sTCP:LISTEN'
+alias port5000='lsof -nP -iTCP:5000 -sTCP:LISTEN'
+alias port8000='lsof -nP -iTCP:8000 -sTCP:LISTEN'
+alias port8080='lsof -nP -iTCP:8080 -sTCP:LISTEN'
+
+# 프로세스 찾기
+alias pyp='pgrep -af python'
+alias uvp='pgrep -af uvicorn'
+alias djangop='pgrep -af manage.py'
+alias nodep='pgrep -af node'
+
+# 포트 종료
+alias kill3000='kill -9 $(lsof -t -i:3000)'
+alias kill5000='kill -9 $(lsof -t -i:5000)'
+alias kill8000='kill -9 $(lsof -t -i:8000)'
+alias kill8080='kill -9 $(lsof -t -i:8080)'
+
+# 응답 확인
+alias check3000='curl -I http://localhost:3000'
+alias check5000='curl -I http://localhost:5000'
+alias check8000='curl -I http://localhost:8000'
+alias check8080='curl -I http://localhost:8080'
+
+# 포트 확인 + 응답 확인
+alias status3000="echo '--- PORT 3000 ---' && lsof -nP -iTCP:3000 -sTCP:LISTEN && echo && curl -I http://localhost:3000"
+alias status8000="echo '--- PORT 8000 ---' && lsof -nP -iTCP:8000 -sTCP:LISTEN && echo && curl -I http://localhost:8000"
+
 
 
