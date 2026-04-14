@@ -4,6 +4,8 @@
 
 핵심 원칙은 다음과 같습니다.
 
+> 런타임 버전은 `mise`로 관리하고, 공용 CLI는 가능한 한 런타임과 분리해 독립 설치한다.
+
 - 대상 OS는 macOS 하나로 고정한다.
 - `zsh` 설정은 기능별 파일로 나눠서 읽기 쉽게 유지한다.
 - 새 맥에서는 `clone -> bootstrap`만으로 기본 환경이 올라오게 한다.
@@ -81,20 +83,44 @@ exec zsh
   - 실제 진입점입니다.
   - `env -> prompt -> history -> aliases -> functions -> keybindings -> tools -> runtime -> secrets -> local` 순서로 로드합니다.
 - `zsh/env.zsh`
-  - 공통 환경변수와 macOS용 `PATH`를 설정합니다.
+  - 공유 가능한 non-secret 환경변수와 기본 `PATH`를 설정합니다.
+  - editor/pager, 공용 CLI 경로, macOS 앱 CLI 탐색처럼 장비 간 재사용 가능한 설정을 둡니다.
 - `zsh/prompt.zsh`
   - `oh-my-zsh`, `powerlevel10k`, `zsh-autosuggestions`를 설정합니다.
+- `zsh/history.zsh`
+  - shell history 저장 정책과 중복 처리 방식을 관리합니다.
+- `zsh/aliases.zsh`
+  - 짧은 alias만 둡니다.
+  - 장비 경로나 개인 워크플로우에 묶인 alias는 `local.zsh`로 보냅니다.
+- `zsh/functions.zsh`
+  - 재사용 가능한 범용 shell 함수만 둡니다.
+  - 장비/경로 의존 함수는 `local.zsh`로 보냅니다.
+- `zsh/keybindings.zsh`
+  - interactive key binding만 관리합니다.
 - `zsh/tools.zsh`
   - `fzf`, `delta`, `atuin`, `direnv`, `zoxide`, `bun` completion을 초기화합니다.
 - `zsh/runtime.zsh`
   - `mise`를 활성화하고 예전 버전 매니저 흔적을 정리합니다.
+  - 런타임 버전 선택은 이 파일에서만 처리합니다.
 - `zsh/local.zsh`
-  - iTerm integration, 로컬 alias, 개인 도구 completion처럼 장비 전용 설정을 둡니다.
+  - iTerm integration, 로컬 alias, 개인 도구 completion, 경로 고정 helper처럼 장비 전용 설정을 둡니다.
 - `zsh/secrets.zsh`
   - 비밀값만 둡니다.
+  - `env.zsh`와 달리 이 파일은 Git에 올리지 않고, 민감한 token과 credential만 관리합니다.
 - `~/.p10k.zsh`
   - 존재하면 이 파일이 우선 적용됩니다.
   - 없으면 저장소의 `zsh/p10k.zsh` fallback 설정이 사용됩니다.
+
+즉 역할은 다음처럼 나눕니다.
+
+- `env.zsh`
+  - 공유 가능한 기본 shell 환경
+- `runtime.zsh`
+  - 런타임 버전 선택과 PATH 정리
+- `secrets.zsh`
+  - 민감한 credential
+- `local.zsh`
+  - 현재 장비에서만 쓰는 alias/function/completion
 
 ## 로컬 파일 정책
 

@@ -1,12 +1,19 @@
-# machine-specific settings that should not be committed
+# Purpose: Git에 올리지 않는 machine-specific 설정의 예시 템플릿이다.
+# host/path 의존 alias, function, completion, terminal integration만 여기에 둔다.
 
+# Terminal integration
 if [[ -r "$HOME/.iterm2_shell_integration.zsh" ]]; then
   source "$HOME/.iterm2_shell_integration.zsh"
 fi
 
+# Local tool completions
 if [[ -r "$HOME/.openclaw/completions/openclaw.zsh" ]]; then
   source "$HOME/.openclaw/completions/openclaw.zsh"
 fi
 
+# Machine-local aliases
 alias tm='task-master'
 alias taskmaster='task-master'
+
+# Machine-local functions
+# 경로가 고정되거나 장비 의존적인 함수는 여기에 둔다.

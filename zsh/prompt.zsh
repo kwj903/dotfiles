@@ -1,4 +1,5 @@
-# prompt, completion, and prompt-related plugins
+# Purpose: 프롬프트 테마와 프롬프트 관련 플러그인 초기화를 담당한다.
+# oh-my-zsh, powerlevel10k, autosuggestions처럼 UI/입력 보조 요소만 여기서 로드한다.
 export ZSH="$HOME/.oh-my-zsh"
 P10K_THEME_FILE="$ZSH/custom/themes/powerlevel10k/powerlevel10k.zsh-theme"
 

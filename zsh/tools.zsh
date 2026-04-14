@@ -1,4 +1,5 @@
-# external tool hooks and shell integrations
+# Purpose: 설치된 CLI 도구의 shell hook, completion, integration을 초기화한다.
+# fzf, direnv, zoxide처럼 도구가 제공하는 shell 연동만 다루고, 일반 env는 env.zsh에 둔다.
 # ------------------------------
 # fzf
 # ------------------------------

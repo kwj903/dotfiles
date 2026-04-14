@@ -1,4 +1,6 @@
-# shell environment variables and PATH
+# Purpose: 공유 가능한 non-secret shell 기본값을 정의한다.
+# editor/pager, 기본 PATH, macOS 앱 CLI 탐색처럼 장비 간 재사용 가능한 설정만 둔다.
+# 비밀값은 secrets.zsh에, 런타임 선택은 runtime.zsh에 둔다.
 typeset -U path PATH
 
 export EDITOR="code --wait"
@@ -33,6 +35,7 @@ add_macos_app_cli_paths() {
 
 path=(
   "$HOME/.local/bin"
+  "$HOME/.npm-global/bin"
   "$BUN_INSTALL/bin"
   "/opt/homebrew/bin"
   "/opt/homebrew/sbin"
