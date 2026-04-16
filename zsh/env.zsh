@@ -9,6 +9,7 @@ export PAGER="less -FRX"
 export GOG_ACCOUNT=kwakwoojae@gmail.com
 export BUN_INSTALL="$HOME/.bun"
 
+
 add_path_if_dir() {
   [[ -d "$1" ]] && path=("$1" $path)
 }
@@ -45,6 +46,7 @@ path=(
   "/bin"
   "/usr/sbin"
   "/sbin"
+  "/usr/local/go/bin"
   $path
 )
 
