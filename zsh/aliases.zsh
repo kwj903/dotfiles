@@ -50,10 +50,6 @@ alias tree="eza --tree"
 # cat 대신 bat으로 파일 내용을 보기 좋게 출력
 alias cat="bat --paging=never"
 
-# grep 대신 ripgrep을 사용
-alias grep="rg"
-
-
 # ===== macOS =====
 
 # 현재는 macOS 전용 alias 없음
@@ -67,7 +63,7 @@ alias j="just"
 alias w="watchexec"
 
 # 명령 실행 시간을 간단히 벤치마크
-alias hf="hyperfine"
+alias hpf="hyperfine"
 
 # ===== Network =====
 
@@ -118,3 +114,9 @@ alias status3000="echo '--- PORT 3000 ---' && lsof -nP -iTCP:3000 -sTCP:LISTEN &
 
 # 8000 포트의 점유 상태와 HTTP 응답을 한 번에 확인
 alias status8000="echo '--- PORT 8000 ---' && lsof -nP -iTCP:8000 -sTCP:LISTEN && echo && curl -I http://localhost:8000"
+
+# ===== Tools =====
+
+# qwen3.6 35b-a3b모델의 가장 빠른버전을llama.cpp서버로 띄움
+alias llgsqwen3.6='llgs Qwen3.6-35B-A3B-IQ4_XS.gguf 8080 --n-gpu-layers 0 -fa off -t 8'
+

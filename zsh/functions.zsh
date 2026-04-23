@@ -11,6 +11,8 @@ typeset -ga ZSH_FUNCTION_MODULES=(
   claude_helpers
   ports
   alias_manager
+  llama_helpers
+  vulkan_helpers
 )
 
 for module in "${ZSH_FUNCTION_MODULES[@]}"; do

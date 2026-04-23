@@ -10,6 +10,8 @@ alias g="lazygit"
 # git 상태를 짧게 확인
 alias gs='git status -sb'
 
+# 전체 파일 스테이징
+alias ga='git add .'
 
 # ===== Python =====
 
@@ -22,7 +24,6 @@ alias uvp='pgrep -af uvicorn'
 # 현재 실행 중인 Django manage.py 프로세스를 확인
 alias djangop='pgrep -af manage.py'
 
-
 # ===== Docker =====
 
 # 현재는 Docker 관련 alias 없음
@@ -34,7 +35,6 @@ alias ta='tmux new -As work'
 
 # iTerm2용 tmux -CC 방식으로 work 세션에 붙거나 생성
 alias tcc='tmux -CC new -A -s work'
-
 
 # ===== Files =====
 
@@ -67,8 +67,7 @@ alias j="just"
 alias w="watchexec"
 
 # 명령 실행 시간을 간단히 벤치마크
-alias hf="hyperfine"
-
+alias hpf="hyperfine"
 
 # ===== Network =====
 
@@ -119,3 +118,4 @@ alias status3000="echo '--- PORT 3000 ---' && lsof -nP -iTCP:3000 -sTCP:LISTEN &
 
 # 8000 포트의 점유 상태와 HTTP 응답을 한 번에 확인
 alias status8000="echo '--- PORT 8000 ---' && lsof -nP -iTCP:8000 -sTCP:LISTEN && echo && curl -I http://localhost:8000"
+

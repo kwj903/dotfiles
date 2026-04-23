@@ -1,6 +1,16 @@
 # Alias manager
 # aliases.zsh를 섹션/주석 단위로 관리한다.
 
+#========명령어 설명==========
+# mkaliass : 섹션 + 설명 주석 + alias 추가
+# rmaliass : alias 삭제
+# lsaliases : 원본 그대로 보기
+# showaliases : 보기 좋게 정리해서 보기
+# aliasgrep : 검색
+# aliassections : 허용 섹션 목록 보기
+# edaliases : alias 파일 열기
+
+#========구현 함수==========
 _alias_file() {
   echo "${HOME}/.dotfiles/zsh/aliases.zsh"
 }
@@ -15,6 +25,7 @@ Files
 macOS
 Project
 Network
+Tools
 EOF
 }
 
@@ -257,6 +268,45 @@ lsaliases() {
   fi
 
   cat "$alias_file"
+}
+
+showaliases() {
+  local alias_file
+  alias_file="$(_alias_file)"
+
+  if [[ ! -f "$alias_file" ]]; then
+    echo "alias 파일이 없습니다: $alias_file"
+    return 1
+  fi
+
+  awk '
+    /^# ===== .* =====$/ {
+      if (printed_any == 1) {
+        print ""
+      }
+      print $0
+      printed_any = 1
+      next
+    }
+
+    /^# / {
+      print "  " $0
+      next
+    }
+
+    /^alias / {
+      print "  " $0
+      next
+    }
+
+    /^[[:space:]]*$/ {
+      next
+    }
+
+    {
+      print "  " $0
+    }
+  ' "$alias_file"
 }
 
 edaliases() {

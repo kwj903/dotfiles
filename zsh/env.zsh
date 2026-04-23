@@ -8,6 +8,7 @@ export VISUAL="$EDITOR"
 export PAGER="less -FRX"
 export GOG_ACCOUNT=kwakwoojae@gmail.com
 export BUN_INSTALL="$HOME/.bun"
+export VULKAN_HOME="$HOME/VulkanSDK"
 
 
 add_path_if_dir() {
