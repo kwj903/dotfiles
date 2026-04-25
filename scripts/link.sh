@@ -19,3 +19,7 @@ backup_if_needed() {
 
 echo "[link] ~/.zshrc -> $DOTFILES_DIR/zsh/zshrc"
 backup_if_needed "$HOME/.zshrc" "$DOTFILES_DIR/zsh/zshrc"
+
+echo "[link] ~/.config/mise/config.toml -> $DOTFILES_DIR/mise/config.toml"
+mkdir -p "$HOME/.config/mise"
+backup_if_needed "$HOME/.config/mise/config.toml" "$DOTFILES_DIR/mise/config.toml"

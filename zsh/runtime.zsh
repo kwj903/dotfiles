@@ -25,36 +25,3 @@ fi
 typeset -U path PATH
 
 export PATH
-
-# ===== Zsh completion 초기화 =====
-# completion 시스템은 한 번만 초기화한다.
-if [[ -z "${DOTFILES_COMPINIT_DONE:-}" ]]; then
-  autoload -Uz compinit
-  compinit
-  export DOTFILES_COMPINIT_DONE=1
-fi
-
-# ===== completion 동작 기본 옵션 =====
-# Tab이 첫 후보를 강제로 꽂아넣으며 순환하는 동작은 끈다.
-unsetopt MENU_COMPLETE
-
-# 여러 후보가 있으면 목록/메뉴 쪽으로 동작하게 한다.
-setopt AUTO_LIST
-setopt AUTO_MENU
-setopt COMPLETE_IN_WORD
-
-# 메뉴 선택 UI 모듈
-zmodload zsh/complist
-
-# 메뉴형 선택 UI
-zstyle ':completion:*' menu select=1
-zstyle ':completion:*' list yes
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
-zstyle ':completion:*' verbose yes
-
-# ===== llama helper completion =====
-# compinit 이후에 로드되어야 한다.
-if [[ -f "$DOTFILES_DIR/zsh/modules/llama_completions.zsh" ]]; then
-  source "$DOTFILES_DIR/zsh/modules/llama_completions.zsh"
-fi

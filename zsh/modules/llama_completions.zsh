@@ -81,10 +81,6 @@ _llama_comp_show_model_refs() {
   model_files=("${(@f)$(_llama_comp_collect_model_file_names)}")
   model_folders=("${(@f)$(_llama_comp_collect_model_folders)}")
 
-  # 바로 메뉴 선택 쪽으로 유도
-  compstate[insert]=menu
-  compstate[list]=list
-
   (( ${#model_files[@]} )) && _wanted model-files expl 'model files' \
     compadd -Q -S '' -a model_files && ret=0
 
@@ -98,9 +94,6 @@ _llama_comp_show_hf_cache_files() {
   local -a files
   files=("${(@f)$(_llama_comp_collect_hf_cache_files)}")
 
-  compstate[insert]=menu
-  compstate[list]=list
-
   (( ${#files[@]} )) && _wanted hf-cache-files expl 'hf cache gguf files' \
     compadd -Q -S '' -a files
 }
@@ -108,9 +101,6 @@ _llama_comp_show_hf_cache_files() {
 _llama_comp_show_stop_targets() {
   local -a targets
   targets=("${(@f)$(_llama_comp_collect_stop_targets)}")
-
-  compstate[insert]=menu
-  compstate[list]=list
 
   (( ${#targets[@]} )) && _wanted stop-targets expl 'stop targets' \
     compadd -Q -S '' -a targets
@@ -139,9 +129,6 @@ _llama_complete_server_cmd() {
   if (( CURRENT == 3 )); then
     local -a ports
     ports=(8080 8081 8090 8091)
-
-    compstate[insert]=menu
-    compstate[list]=list
 
     _wanted llama-ports expl 'server ports' compadd -Q -S '' -a ports
     return
@@ -178,9 +165,6 @@ _llama_complete_move_cmd() {
   if (( CURRENT == 3 )); then
     local -a folders
     folders=("${(@f)$(_llama_comp_collect_model_folders)}")
-
-    compstate[insert]=menu
-    compstate[list]=list
 
     (( ${#folders[@]} )) && _wanted target-folders expl 'target folders' \
       compadd -Q -S '' -a folders

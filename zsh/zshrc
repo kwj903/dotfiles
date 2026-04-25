@@ -14,8 +14,9 @@ for file in \
   "$DOTFILES_DIR/zsh/aliases.zsh" \
   "$DOTFILES_DIR/zsh/functions.zsh" \
   "$DOTFILES_DIR/zsh/keybindings.zsh" \
-  "$DOTFILES_DIR/zsh/tools.zsh" \
   "$DOTFILES_DIR/zsh/runtime.zsh" \
+  "$DOTFILES_DIR/zsh/completion.zsh" \
+  "$DOTFILES_DIR/zsh/tools.zsh" \
   "$DOTFILES_DIR/zsh/secrets.zsh" \
   "$DOTFILES_DIR/zsh/local.zsh"
 do

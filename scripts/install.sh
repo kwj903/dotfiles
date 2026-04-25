@@ -55,6 +55,21 @@ seed_local_files() {
   fi
 }
 
+install_mise_runtimes() {
+  if ! command -v mise >/dev/null 2>&1; then
+    echo "[install] mise가 PATH에 없어 런타임 설치를 건너뜁니다."
+    return 1
+  fi
+
+  if [[ -f "$DOTFILES_DIR/mise/config.toml" ]]; then
+    echo "[install] mise config trust"
+    mise trust --yes "$DOTFILES_DIR/mise/config.toml"
+  fi
+
+  echo "[install] mise 런타임 설치"
+  mise install
+}
+
 echo "[install] macOS dotfiles 설치 시작"
 
 ensure_macos
@@ -72,6 +87,7 @@ install_powerlevel10k_if_missing
 install_bun_if_missing
 
 "$DOTFILES_DIR/scripts/link.sh"
+install_mise_runtimes
 seed_local_files
 "$DOTFILES_DIR/scripts/check.sh"
 

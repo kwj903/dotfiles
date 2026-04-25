@@ -4,10 +4,13 @@
 
 ## 런타임 관리 원칙
 
+- `mise` CLI 자체는 Homebrew로 설치한다.
 - 언어 런타임 버전은 `mise`로 관리한다.
 - 현재 기본 런타임:
   - `node = 24`
   - `python = 3.12`
+- 전역 설정은 `~/.dotfiles/mise/config.toml`에서 관리하고 `~/.config/mise/config.toml`로 symlink한다.
+- 설치 시 repo 관리 config를 `mise trust`한 뒤 `mise install`을 실행한다.
 - 셸 PATH에서 특정 `mise install` 버전 경로를 직접 우선 노출하지 않는다.
 - 런타임 선택은 `mise activate`가 담당한다.
 
@@ -15,6 +18,7 @@
 
 ### 1) 런타임
 - `node`, `python` 같은 언어 런타임만 `mise`로 관리
+- `mise` 자체는 `Brewfile`의 `brew "mise"`로 설치
 
 ### 2) 독립 CLI
 - 가능하면 Homebrew, cask, 공식 standalone 설치 사용
@@ -54,7 +58,8 @@
 
 ## 기억할 것
 
-- `mise`는 런타임 관리자
+- Homebrew는 `mise` CLI 설치 관리자
+- `mise`는 언어 런타임 관리자
 - 공용 CLI는 독립 설치 우선
 - Node 전역 CLI는 `~/.npm-global`
 - 프로젝트 도구는 프로젝트 로컬 설치 우선

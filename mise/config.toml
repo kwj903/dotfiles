@@ -1,0 +1,9 @@
+[tools]
+node = "24"
+python = "3.12"
+
+[settings]
+python.uv_venv_auto = false
+
+[settings.node]
+gpg_verify = false

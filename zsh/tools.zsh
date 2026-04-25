@@ -1,18 +1,6 @@
-# Purpose: 설치된 CLI 도구의 shell hook, completion, integration을 초기화한다.
-# fzf, direnv, zoxide처럼 도구가 제공하는 shell 연동만 다루고, 일반 env는 env.zsh에 둔다.
-# ------------------------------
-# fzf
-# ------------------------------
-export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}' --preview-window=right:60%"
+# Purpose: 설치된 CLI 도구의 shell hook과 integration을 초기화한다.
+# completion UI와 입력 보조 플러그인은 completion.zsh에서 로드 순서를 관리한다.
 export _ZO_FZF_OPTS="--height=40% --reverse"
-
-if [[ -f ~/.fzf.zsh ]]; then
-  source ~/.fzf.zsh
-elif command -v brew >/dev/null 2>&1; then
-  FZF_PREFIX="$(brew --prefix fzf 2>/dev/null || true)"
-  [[ -f "$FZF_PREFIX/shell/key-bindings.zsh" ]] && source "$FZF_PREFIX/shell/key-bindings.zsh"
-  [[ -f "$FZF_PREFIX/shell/completion.zsh" ]] && source "$FZF_PREFIX/shell/completion.zsh"
-fi
 
 # ------------------------------
 # git-delta

@@ -44,6 +44,7 @@ exec zsh
   - Xcode Command Line Tools와 Homebrew를 확인한 뒤 `install.sh`를 호출합니다.
 - `scripts/install.sh`
   - `Brewfile` 기준으로 CLI, 앱, VS Code 확장을 설치합니다.
+  - `mise/config.toml`을 trust한 뒤 `node`, `python` 런타임을 설치합니다.
   - `oh-my-zsh`, `powerlevel10k`, `bun`이 없으면 함께 설치합니다.
   - `~/.zshrc`를 이 저장소의 `zsh/zshrc`로 연결합니다.
   - `zsh/local.zsh`, `zsh/secrets.zsh`가 없으면 example 파일로 초기화합니다.
@@ -62,8 +63,11 @@ exec zsh
 │   ├── check.sh
 │   ├── install.sh
 │   └── link.sh
+├── mise
+│   └── config.toml
 └── zsh
     ├── aliases.zsh
+    ├── completion.zsh
     ├── env.zsh
     ├── functions.zsh
     ├── history.zsh
@@ -81,12 +85,12 @@ exec zsh
 
 - `zsh/zshrc`
   - 실제 진입점입니다.
-  - `env -> prompt -> history -> aliases -> functions -> keybindings -> tools -> runtime -> secrets -> local` 순서로 로드합니다.
+  - `env -> prompt -> history -> aliases -> functions -> keybindings -> runtime -> completion -> tools -> secrets -> local` 순서로 로드합니다.
 - `zsh/env.zsh`
   - 공유 가능한 non-secret 환경변수와 기본 `PATH`를 설정합니다.
   - editor/pager, 공용 CLI 경로, macOS 앱 CLI 탐색처럼 장비 간 재사용 가능한 설정을 둡니다.
 - `zsh/prompt.zsh`
-  - `oh-my-zsh`, `powerlevel10k`, `zsh-autosuggestions`를 설정합니다.
+  - `oh-my-zsh`, `powerlevel10k`를 설정합니다.
 - `zsh/history.zsh`
   - shell history 저장 정책과 중복 처리 방식을 관리합니다.
 - `zsh/aliases.zsh`
@@ -97,11 +101,14 @@ exec zsh
   - 장비/경로 의존 함수는 `local.zsh`로 보냅니다.
 - `zsh/keybindings.zsh`
   - interactive key binding만 관리합니다.
-- `zsh/tools.zsh`
-  - `fzf`, `delta`, `atuin`, `direnv`, `zoxide`, `bun` completion을 초기화합니다.
 - `zsh/runtime.zsh`
   - `mise`를 활성화하고 예전 버전 매니저 흔적을 정리합니다.
   - 런타임 버전 선택은 이 파일에서만 처리합니다.
+- `zsh/completion.zsh`
+  - `compinit`, `fzf`, `fzf-tab`, fallback native completion, custom completion을 초기화합니다.
+  - `fzf-tab`이 없으면 native `menuselect`로 fallback하고 `Esc`/`Ctrl-G`로 닫히게 합니다.
+- `zsh/tools.zsh`
+  - `delta`, `atuin`, `direnv`, `zoxide`, `bun` shell hook을 초기화합니다.
 - `zsh/local.zsh`
   - iTerm integration, 로컬 alias, 개인 도구 completion, 경로 고정 helper처럼 장비 전용 설정을 둡니다.
 - `zsh/secrets.zsh`
@@ -138,16 +145,46 @@ exec zsh
 
 `Brewfile`은 새 맥에서 바로 필요한 도구를 재현하는 기준 파일입니다.
 
+`mise` 자체는 Homebrew로 설치하고, 언어 런타임은 `mise/config.toml`에서 관리합니다.
+
 - CLI 도구
-  - `git`, `ripgrep`, `bat`, `eza`, `fzf`, `gh`, `tmux`, `zoxide`, `atuin`, `direnv`, `mise`, `just`, `git-delta`, `watchexec`, `hyperfine`
+  - `git`, `ripgrep`, `bat`, `eza`, `fzf`, `fzf-tab`, `gh`, `tmux`, `zoxide`, `atuin`, `direnv`, `mise`, `just`, `git-delta`, `watchexec`, `hyperfine`
 - 앱
   - `visual-studio-code`, `raycast`, `tailscale-app`
 - 폰트
   - `font-meslo-lg-nerd-font`
 - VS Code 확장
-  - 현재 사용하는 확장 목록을 그대로 설치합니다.
+  - Git, Python, Docker, Remote, formatting처럼 범용적인 기본 확장만 설치합니다.
+  - 개인 취향성 AI/chat, DB, notebook 보조, 언어팩, 도메인 전용 확장은 필요할 때 별도로 추가합니다.
 
 `brew bundle`은 기본적으로 설치와 동기화만 수행하고, 패키지 정리는 강제로 하지 않습니다.
+
+## mise 운영 원칙
+
+- Homebrew가 `mise` CLI를 설치합니다.
+- `mise`가 `node=24`, `python=3.12` 런타임을 설치하고 활성화합니다.
+- `mise/config.toml`은 dotfiles repo가 관리하고, `~/.config/mise/config.toml`은 이 파일을 가리키는 symlink입니다.
+- `scripts/install.sh`는 repo의 `mise/config.toml`을 `mise trust`한 뒤 `mise install`을 실행합니다.
+- `~/.npm-global/bin`은 버전 중립 전역 CLI를 위해 runtime-specific bin보다 앞에 둡니다.
+- 기존 standalone `~/.local/bin/mise`가 있으면 백업 후 Homebrew 설치본을 사용합니다.
+- `mise doctor`에서 `~/.npm-global/bin` 우선순위 warning이 1개 보일 수 있는데, 현재 정책상 의도된 상태입니다.
+
+현재 Mac을 Homebrew `mise` 기준으로 마이그레이션할 때는:
+
+```bash
+brew install mise
+mv ~/.local/bin/mise ~/.local/bin/mise.standalone-backup.$(date +%Y%m%d%H%M%S)
+~/.dotfiles/scripts/link.sh
+mise trust ~/.dotfiles/mise/config.toml
+mise install
+exec zsh
+```
+
+현재 Mac에서 standalone `mise`를 되돌려야 한다면:
+
+```bash
+mv ~/.local/bin/mise.standalone-backup.<timestamp> ~/.local/bin/mise
+```
 
 ## 운영 메모
 
