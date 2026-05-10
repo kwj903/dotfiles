@@ -154,8 +154,8 @@ exec zsh
 - 폰트
   - `font-meslo-lg-nerd-font`
 - VS Code 확장
-  - Git, Python, Docker, Remote, formatting처럼 범용적인 기본 확장만 설치합니다.
-  - 개인 취향성 AI/chat, DB, notebook 보조, 언어팩, 도메인 전용 확장은 필요할 때 별도로 추가합니다.
+  - Git, Python, Docker, Remote, formatting처럼 범용적인 기본 확장과 한국어 language pack만 설치합니다.
+  - 개인 취향성 AI/chat, DB, notebook 보조, 도메인 전용 확장은 필요할 때 별도로 추가합니다.
 
 `brew bundle`은 기본적으로 설치와 동기화만 수행하고, 패키지 정리는 강제로 하지 않습니다.
 

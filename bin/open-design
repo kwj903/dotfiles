@@ -1,0 +1,114 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+PROJECT_DIR="${OPEN_DESIGN_DIR:-$HOME/tools/ai-tools/open-design}"
+
+export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.npm-global/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
+die() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+run_pnpm() {
+  if command -v mise >/dev/null 2>&1; then
+    mise exec -- pnpm "$@"
+  else
+    pnpm "$@"
+  fi
+}
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  open-design                 Start Open Design web mode in background
+  open-design start           Start Open Design web mode in background
+  open-design run             Run Open Design web mode in foreground
+  open-design stop            Stop Open Design
+  open-design restart         Restart Open Design web mode
+  open-design status          Show runtime status
+  open-design logs            Show logs
+  open-design doctor          Check repo/runtime basics
+  open-design path            Print Open Design project path
+
+Environment:
+  OPEN_DESIGN_DIR=/path/to/open-design  Override project directory
+USAGE
+}
+
+[[ -d "$PROJECT_DIR" ]] || die "Open Design repo not found: $PROJECT_DIR"
+
+cd "$PROJECT_DIR"
+
+command -v pnpm >/dev/null 2>&1 || command -v mise >/dev/null 2>&1 || die "pnpm or mise not found"
+
+cmd="${1:-start}"
+if [[ $# -gt 0 ]]; then
+  shift
+fi
+
+case "$cmd" in
+  start)
+    run_pnpm tools-dev start web "$@"
+    run_pnpm tools-dev status
+    ;;
+
+  run)
+    run_pnpm tools-dev run web "$@"
+    ;;
+
+  stop)
+    run_pnpm tools-dev stop "$@"
+    ;;
+
+  restart)
+    run_pnpm tools-dev stop || true
+    run_pnpm tools-dev start web "$@"
+    run_pnpm tools-dev status
+    ;;
+
+  status)
+    run_pnpm tools-dev status "$@"
+    ;;
+
+  logs)
+    run_pnpm tools-dev logs "$@"
+    ;;
+
+  doctor)
+    echo "== Open Design path =="
+    pwd
+    echo
+
+    echo "== Git status =="
+    git status --short --branch
+    echo
+
+    echo "== Runtime =="
+    node -v
+    corepack pnpm --version
+    echo
+
+    echo "== Package version =="
+    grep '"version"' package.json | head -1
+    echo
+
+    echo "== tools-dev status =="
+    run_pnpm tools-dev status || true
+    ;;
+
+  path)
+    pwd
+    ;;
+
+  help|--help|-h)
+    usage
+    ;;
+
+  *)
+    echo "Unknown command: $cmd" >&2
+    echo >&2
+    usage >&2
+    exit 2
+    ;;
+esac

@@ -36,6 +36,7 @@ add_macos_app_cli_paths() {
 }
 
 path=(
+  "$HOME/bin"
   "$HOME/.local/bin"
   "$HOME/.npm-global/bin"
   "$BUN_INSTALL/bin"

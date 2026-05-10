@@ -120,3 +120,12 @@ alias status8000="echo '--- PORT 8000 ---' && lsof -nP -iTCP:8000 -sTCP:LISTEN &
 # qwen3.6 35b-a3b모델의 가장 빠른버전을llama.cpp서버로 띄움
 alias llgsqwen3.6='llgs Qwen3.6-35B-A3B-IQ4_XS.gguf 8080 --n-gpu-layers 0 -fa off -t 8'
 
+# 오픈디자인 웹서버 및 데몬서버 실행
+alias od-web='cd ~/tools/ai-tools/open-design && env -u OPENAI_API_KEY -u CODEX_API_KEY OD_CODEX_DISABLE_PLUGINS=1 pnpm tools-dev run web'
+
+# 오픈디자인 웹서버 및 데몬서버 스톱
+alias od-stop='cd ~/tools/ai-tools/open-design && pnpm tools-dev stop'
+
+# 오픈디자인 웹서버 및 데몬서버 상태체크
+alias od-check='cd ~/tools/ai-tools/open-design && pnpm tools-dev check'
+

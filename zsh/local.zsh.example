@@ -11,6 +11,10 @@ if [[ -r "$HOME/.openclaw/completions/openclaw.zsh" ]]; then
   source "$HOME/.openclaw/completions/openclaw.zsh"
 fi
 
+if command -v ngrok >/dev/null 2>&1; then
+  eval "$(ngrok completion 2>/dev/null)"
+fi
+
 # Machine-local aliases
 alias tm='task-master'
 alias taskmaster='task-master'
