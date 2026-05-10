@@ -1,11 +1,21 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-# Open Design launcher managed by ~/.dotfiles.
-# Default source install: ~/tools/ai-tools/open-design
+# Open Design 전역 실행용 런처 스크립트.
+# ~/.dotfiles/bin/open-design 파일을 원본으로 관리하고,
+# ~/bin/open-design 심볼릭 링크를 통해 PATH 어디서든 실행한다.
+#
+# 기본 사용:
+#   open-design        # 웹 모드 실행 후 브라우저 열기
+#   open-design app    # 데스크톱 앱 모드 실행
+#   open-design stop   # 실행 중인 Open Design 중지
 
+# 기본 Open Design 소스 설치 위치.
+# 다른 위치에 설치한 경우 OPEN_DESIGN_DIR 환경변수로 덮어쓸 수 있다.
 PROJECT_DIR="${OPEN_DESIGN_DIR:-$HOME/tools/ai-tools/open-design}"
 
+# 사용 가능한 서브커맨드와 예시를 출력한다.
+# `open-design help`, `open-design --help`, 잘못된 명령 입력 시 사용된다.
 usage() {
   cat <<'USAGE'
 Usage:
@@ -33,22 +43,31 @@ Environment:
 USAGE
 }
 
+# 에러 메시지를 stderr로 출력하고 즉시 종료한다.
+# 반복되는 검증 실패 처리를 짧게 유지하기 위한 helper다.
 die() {
   echo "ERROR: $*" >&2
   exit 1
 }
 
+# Open Design repo가 실제로 존재하는지 확인한 뒤 해당 디렉터리로 이동한다.
+# tools-dev는 repo root에서 실행되어야 하므로 모든 명령 전에 이 함수를 먼저 호출한다.
 need_project() {
   [[ -d "$PROJECT_DIR" ]] || die "Open Design repo not found: $PROJECT_DIR"
   cd "$PROJECT_DIR"
 }
 
+# 실행에 필요한 패키지 매니저가 PATH에 잡히는지 확인한다.
+# pnpm이 직접 잡히거나, mise가 잡혀서 `mise exec -- pnpm`을 사용할 수 있으면 통과한다.
 ensure_tooling() {
   if ! command -v pnpm >/dev/null 2>&1 && ! command -v mise >/dev/null 2>&1; then
     die "pnpm or mise not found on PATH"
   fi
 }
 
+# pnpm 실행을 한 곳으로 모은 wrapper.
+# mise가 있으면 프로젝트의 mise 설정을 반영해 pnpm을 실행하고,
+# mise가 없으면 현재 PATH의 pnpm을 그대로 사용한다.
 pnpm_cmd() {
   if command -v mise >/dev/null 2>&1; then
     mise exec -- pnpm "$@"
@@ -57,10 +76,14 @@ pnpm_cmd() {
   fi
 }
 
+# `tools-dev status --json` 출력에서 로컬 웹 URL을 하나 추출한다.
+# JSON 구조가 바뀌어도 localhost/127.0.0.1 URL 패턴만 찾도록 단순하게 처리한다.
 extract_web_url() {
   perl -0777 -ne 'if (m{https?://(?:127\.0\.0\.1|localhost):\d+[^\s"'"'"']*}) { print "$&\n"; exit }'
 }
 
+# 현재 tools-dev 상태에서 웹 URL을 찾아 macOS 기본 브라우저로 연다.
+# URL 추출에 실패하면 상태 정보를 출력해 사용자가 직접 확인할 수 있게 한다.
 open_browser_from_status() {
   local status_output web_url
   status_output="$(pnpm_cmd tools-dev status --json 2>/dev/null || true)"
@@ -75,59 +98,78 @@ open_browser_from_status() {
   fi
 }
 
+# 브라우저 사용을 위한 웹 모드 실행.
+# daemon + web을 백그라운드로 시작한 뒤, 감지된 웹 URL을 브라우저로 연다.
 start_web() {
   pnpm_cmd tools-dev start web "$@"
   open_browser_from_status
 }
 
+# 데스크톱 앱 사용을 위한 실행.
+# Open Design 공식 개발 실행 명령인 `pnpm tools-dev`를 감싸며,
+# daemon + web + desktop sidecar를 함께 띄운다.
 start_desktop() {
   pnpm_cmd tools-dev "$@"
   pnpm_cmd tools-dev status || true
 }
 
+# 본격적인 명령 처리 전에 repo 위치와 pnpm/mise 사용 가능 여부를 검증한다.
 need_project
 ensure_tooling
 
+# 첫 번째 인자를 서브커맨드로 사용한다.
+# 인자가 없으면 브라우저 기반 웹 실행을 기본값으로 둔다.
 cmd="${1:-web}"
 if [[ $# -gt 0 ]]; then
   shift
 fi
 
+# 사용자가 입력한 서브커맨드를 Open Design 공식 tools-dev 명령으로 매핑한다.
 case "$cmd" in
   web|browser|start)
+    # 웹 모드: 백그라운드 실행 + 브라우저 자동 열기.
     start_web "$@"
     ;;
 
   app|desktop)
+    # 앱 모드: daemon + web + desktop 앱 실행.
     start_desktop "$@"
     ;;
 
   run)
+    # foreground 웹 실행. 로그를 터미널에서 직접 보고 싶을 때 사용한다.
     pnpm_cmd tools-dev run web "$@"
     ;;
 
   restart)
+    # 기존 런타임을 멈춘 뒤 웹 모드로 다시 시작한다.
     pnpm_cmd tools-dev stop || true
     start_web "$@"
     ;;
 
   stop)
+    # 실행 중인 Open Design 관리 런타임을 중지한다.
     pnpm_cmd tools-dev stop "$@"
     ;;
 
   status)
+    # daemon/web/desktop 실행 상태를 확인한다.
     pnpm_cmd tools-dev status "$@"
     ;;
 
   logs)
+    # tools-dev가 관리하는 런타임 로그를 출력한다.
     pnpm_cmd tools-dev logs "$@"
     ;;
 
   check)
+    # tools-dev의 기본 진단 명령을 실행한다.
     pnpm_cmd tools-dev check "$@"
     ;;
 
   doctor)
+    # 런처/프로젝트 문제를 빠르게 확인하기 위한 종합 점검 명령.
+    # repo 경로, git 상태, Node/pnpm 버전, Open Design 버전, tools-dev 상태를 출력한다.
     echo "== Open Design path =="
     pwd
     echo
@@ -150,14 +192,17 @@ case "$cmd" in
     ;;
 
   path)
+    # 현재 런처가 사용하는 Open Design repo 경로를 출력한다.
     pwd
     ;;
 
   help|--help|-h)
+    # 도움말 출력.
     usage
     ;;
 
   *)
+    # 알 수 없는 명령은 실패 처리하고 사용법을 함께 보여준다.
     echo "Unknown command: $cmd" >&2
     echo >&2
     usage >&2
