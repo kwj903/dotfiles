@@ -47,17 +47,21 @@ exec zsh
   - `mise/config.toml`을 trust한 뒤 `node`, `python` 런타임을 설치합니다.
   - `oh-my-zsh`, `powerlevel10k`, `bun`이 없으면 함께 설치합니다.
   - `~/.zshrc`를 이 저장소의 `zsh/zshrc`로 연결합니다.
+  - `bin/*` 개인 전역 명령어를 `~/bin/*`로 연결합니다.
   - `zsh/local.zsh`, `zsh/secrets.zsh`가 없으면 example 파일로 초기화합니다.
 - `scripts/check.sh`
-  - 주요 명령, 프롬프트 자산, 심볼릭 링크 상태를 점검합니다.
+  - 주요 명령, 프롬프트 자산, 심볼릭 링크, 개인 전역 명령어 상태를 점검합니다.
 
 ## 저장소 구조
 
 ```text
 .dotfiles
 ├── .gitignore
+├── .gitattributes
 ├── Brewfile
 ├── README.md
+├── bin
+│   └── open-design
 ├── scripts
 │   ├── bootstrap.sh
 │   ├── check.sh
@@ -129,6 +133,36 @@ exec zsh
 - `local.zsh`
   - 현재 장비에서만 쓰는 alias/function/completion
 
+## 개인 전역 명령어
+
+`bin/`은 매일 직접 실행하는 개인 CLI를 Git으로 관리하는 위치입니다.
+
+```text
+~/.dotfiles/bin/<command>   # Git으로 관리하는 원본
+~/bin/<command>             # PATH에 노출되는 심볼릭 링크
+```
+
+예를 들어 `~/.dotfiles/bin/open-design`은 `~/bin/open-design`로 연결되고, `zsh/env.zsh`가 `~/bin`을 `PATH`에 추가하므로 어느 디렉터리에서나 아래처럼 실행할 수 있습니다.
+
+```bash
+open-design
+open-design app
+open-design stop
+```
+
+역할 기준은 다음과 같습니다.
+
+- `zsh/aliases.zsh`
+  - 한 줄짜리 짧은 별칭을 둡니다.
+- `zsh/functions.zsh`
+  - 현재 셸 상태를 바꾸는 범용 함수를 둡니다.
+- `zsh/local.zsh`
+  - 현재 장비에만 맞는 alias/function/completion을 둡니다.
+- `bin/`
+  - zsh 밖에서도 실행 가능한 개인 전역 명령어를 둡니다. Raycast, Automator, VS Code Task, LaunchAgent, 다른 스크립트에서 호출할 가능성이 있으면 이쪽이 적합합니다.
+
+`scripts/link.sh`는 `bin/*` 파일에 실행 권한을 부여하고 같은 이름으로 `~/bin/*` 심볼릭 링크를 생성합니다. 기존 `~/bin/<command>`가 일반 파일이면 백업한 뒤 링크로 교체합니다.
+
 ## 로컬 파일 정책
 
 다음 파일은 Git에 올리지 않습니다.
@@ -189,9 +223,11 @@ mv ~/.local/bin/mise.standalone-backup.<timestamp> ~/.local/bin/mise
 ## 운영 메모
 
 - `~/.zshrc`가 일반 파일로 이미 있으면 `scripts/link.sh`가 백업한 뒤 심볼릭 링크로 교체합니다.
+- `~/.dotfiles/bin/*`는 `scripts/link.sh`가 `~/bin/*`로 자동 연결합니다.
 - Apple Silicon을 기준으로 `/opt/homebrew/bin`을 우선 `PATH`에 넣고, Intel 경로 `/usr/local/bin`도 함께 포함합니다.
 - 저장소 공통 설정에는 macOS 외 OS 분기를 두지 않습니다.
 - 개인 도구 전용 alias나 completion은 공용 파일이 아니라 `zsh/local.zsh`에 둡니다.
+- shell script와 설정 파일의 줄바꿈은 `.gitattributes`에서 LF로 고정합니다.
 
 ## 문제 해결
 

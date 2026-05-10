@@ -9,3 +9,5 @@
 *.yaml text eol=lf
 *.gitignore text eol=lf
 Brewfile text eol=lf
+bin/* text eol=lf
+scripts/* text eol=lf

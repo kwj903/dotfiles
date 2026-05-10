@@ -50,6 +50,72 @@ check_mise_runtime() {
   fi
 }
 
+check_dotfiles_bin_links() {
+  local source_path target_path name current_target resolved_path found
+  found=0
+
+  echo
+  echo "=== personal bin links ==="
+
+  if [[ ! -d "$DOTFILES_DIR/bin" ]]; then
+    echo "[OK] no ~/.dotfiles/bin directory"
+    return
+  fi
+
+  if [[ -d "$HOME/bin" ]]; then
+    echo "[OK] ~/bin exists"
+  else
+    echo "[MISSING] ~/bin"
+  fi
+
+  for source_path in "$DOTFILES_DIR"/bin/*; do
+    [[ -e "$source_path" ]] || continue
+    [[ -f "$source_path" ]] || continue
+
+    found=1
+    name="$(basename "$source_path")"
+    target_path="$HOME/bin/$name"
+
+    if [[ -x "$source_path" ]]; then
+      echo "[OK] executable source: $source_path"
+    else
+      echo "[WARN] source is not executable: $source_path"
+    fi
+
+    if [[ -L "$target_path" ]]; then
+      current_target="$(readlink "$target_path")"
+      if [[ "$current_target" == "$source_path" ]]; then
+        echo "[OK] link: $target_path -> $current_target"
+      else
+        echo "[WARN] link target mismatch: $target_path -> $current_target"
+      fi
+    elif [[ -e "$target_path" ]]; then
+      echo "[WARN] target exists but is not a symlink: $target_path"
+    else
+      echo "[MISSING] link: $target_path"
+    fi
+
+    if command -v "$name" >/dev/null 2>&1; then
+      resolved_path="$(command -v "$name")"
+      if [[ "$resolved_path" == "$target_path" ]]; then
+        echo "[OK] PATH command: $name -> $resolved_path"
+      else
+        echo "[WARN] PATH command resolves elsewhere: $name -> $resolved_path"
+      fi
+    elif PATH="$HOME/bin:$PATH" command -v "$name" >/dev/null 2>&1; then
+      resolved_path="$(PATH="$HOME/bin:$PATH" command -v "$name")"
+      echo "[WARN] command works with ~/bin prepended, but current shell PATH does not expose it: $name -> $resolved_path"
+      echo "       Run: exec zsh"
+    else
+      echo "[MISSING] PATH command: $name"
+    fi
+  done
+
+  if [[ "$found" -eq 0 ]]; then
+    echo "[OK] no commands in ~/.dotfiles/bin"
+  fi
+}
+
 echo "=== macOS dotfiles health check ==="
 check_cmd git
 check_cmd brew
@@ -117,3 +183,5 @@ if [[ -L "$HOME/.zshrc" ]]; then
 else
   echo "[WARN] ~/.zshrc is not a symlink"
 fi
+
+check_dotfiles_bin_links
